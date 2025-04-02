@@ -54,12 +54,22 @@ export function ProductForm({ isCreating }: { isCreating: boolean }) {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (formData?.id) {
-      await editPackage(formData);
-    }
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  // Elimina los <p> con el atributo data-f-id="pbf" de la descripción
+  const cleanedDescription = formData?.description.replace(
+    /<p[^>]*data-f-id="pbf"[^>]*>.*?<\/p>/g,
+    ''
+  );
+  const updatedFormData = {
+    ...formData,
+    description: cleanedDescription,
   };
+
+  if (updatedFormData?.id) {
+    await editPackage(updatedFormData);
+  }
+};
 
   return (
     <Card className="max-w-2xl mx-auto">

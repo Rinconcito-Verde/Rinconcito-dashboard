@@ -13,6 +13,20 @@ function FroalaEditor({ content, handleChangeContent }) {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setLoading(false);  // Después de 1 segundo, se cambia a 'false' para que se muestre el contenido
+      const frWrapper = document.querySelector('.fr-wrapper');
+      if (frWrapper) {
+        const div = frWrapper.querySelector('div[style="z-index:9999;width:100%;position:relative"]');
+        if (div) {
+          const link = div.querySelector('a'); // Encuentra el enlace <a> dentro del div
+          if (link) {
+            link.textContent = ''; // Borra el texto dentro de <a>
+            link.style.visibility = 'hidden'; // Hace que el enlace sea invisible pero mantiene su espacio
+            link.style.fontSize = '-3px'; // Hace el enlace muy pequeño (si lo prefieres pequeño)
+            link.style.margin = '0px';
+            link.style.padding = '1px';
+          } 
+        }
+      }
     }, 1000);
 
     // Limpiar el timeout si el componente se desmonta
@@ -22,6 +36,7 @@ function FroalaEditor({ content, handleChangeContent }) {
   // Función que maneja el cambio de contenido solo si ya no estamos en el estado de carga
   function setEditorContent(newContent) {
     if (!loading) {  // Si no está cargando, permite manejar el cambio de contenido
+     console.log(newContent)
       handleChangeContent(newContent);
     }
   }
