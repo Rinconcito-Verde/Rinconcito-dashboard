@@ -1,35 +1,52 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Menu, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sidebar } from "@/components/Sidebar"
 import { ProductForm } from "@/components/ProductForm"
 import { CategoryProductList } from "@/components/CategoryProductList"
 import type { Product } from "@/components/types"
+import { useProductsContext } from "../context/ProductsContext"
+import { AddPackageMenu } from "../components/AddPackageMenu"
+import { useMainContent } from "../context/MainContentContext"
 
 export function Dashboard() {
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+  const { editPackage, removePackage } = useProductsContext()
+  const { mainContent, setMainContent} = useMainContent()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  const handleCreateClick = () => {
-    alert("Esta funcion no es compatible con nuestra pasarela de pagos :c")
+  // Set initial content when component mounts
+  useEffect(() => {
+    setMainContent(
+      <CategoryProductList onEditClick={handleEditClick} onRemoveClick={removePackage} />
+    )
+  }, []) // Only run once, after initial render
+
+  function handleCreateClick() {
+    setMainContent(<AddPackageMenu onClose={handleFormClose} />)
   }
 
-  const handleEditClick = (product: Product) => {
-    setEditingProduct(product)
+  function handleEditClick(product: Product) {
+    setMainContent(
+      <ProductForm product={product} onClose={handleFormClose} onSubmit={editPackage} />
+    )
   }
 
-  const handleFormClose = () => {
-    setEditingProduct(null)
+  function handleFormClose() {
+    setMainContent(
+      <CategoryProductList onEditClick={handleEditClick} onRemoveClick={removePackage} />
+    )
   }
 
-  const toggleSidebar = () => {
+  function toggleSidebar() {
     setSidebarOpen(!sidebarOpen)
   }
 
   return (
     <>
       <div className="flex min-h-screen max-h-screen overflow-hidden bg-white">
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} onPackageClick={()=>setMainContent(
+      <CategoryProductList onEditClick={handleEditClick} onRemoveClick={removePackage} />
+    )}/>
         <div className="flex-1">
           <header className="border-b">
             <div className="flex h-16 items-center px-4 gap-4">
@@ -41,18 +58,13 @@ export function Dashboard() {
               <div className="ml-auto flex items-center gap-4">
                 <Button onClick={handleCreateClick}>
                   <Plus className="mr-2 h-4 w-4" />
-                  Crear Producto
+                  Agregar Producto
                 </Button>
               </div>
             </div>
           </header>
           <main className="p-4 md:p-6 max-h-[99%] overflow-auto">
-            {/* Aquí solo el contenido dentro del <main> será desplazable */}
-            {editingProduct ? (
-              <ProductForm product={editingProduct} onClose={handleFormClose} />
-            ) : (
-              <CategoryProductList onEditClick={handleEditClick} />
-            )}
+            {mainContent}
             <p className="mb-28"></p>
           </main>
         </div>

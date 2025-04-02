@@ -9,7 +9,7 @@ interface CategoryProductListProps {
   onEditClick: (product: Product) => void;
 }
 
-export function CategoryProductList({ onEditClick }: CategoryProductListProps) {
+export function CategoryProductList({ onEditClick, onRemoveClick}: CategoryProductListProps) {
   const { categories, packages, error } = useProductsContext();
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
   const categorizedProducts = useMemo(() => {
@@ -82,7 +82,7 @@ export function CategoryProductList({ onEditClick }: CategoryProductListProps) {
           </div>
 
           {expandedCategories[category] && (
-            <ProductTable products={categorizedProducts[category]} onEditClick={onEditClick} />
+            <ProductTable products={categorizedProducts[category]} onEditClick={onEditClick} onRemoveClick={onRemoveClick} />
           )}
         </div>
       ))}

@@ -5,7 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import FroalaEditor from "./TextEditor";  // Asegúrate de que esta ruta sea correcta
+import FroalaEditor from "./TextEditor"; 
+import { useNavigate, useParams } from "react-router-dom";
+import { useProductsContext } from "../context/ProductsContext";
 
 interface Product {
   id?: number;
@@ -19,41 +21,51 @@ interface Product {
   category_id: number;
 }
 
-interface ProductFormProps {
-  product: Product | null;
-  onClose: () => void;
-  isCreating: boolean;
-}
+export function ProductForm({ isCreating }: { isCreating: boolean }) {
+  const { productId } = useParams();
+  const navigate = useNavigate();
+  const { packages, editPackage } = useProductsContext();
 
-export function ProductForm({ product, onClose, isCreating }: ProductFormProps) {
-  const [formData, setFormData] = useState<Partial<Product>>(product);
+  const [formData, setFormData] = useState<Partial<Product> | null>(null);
+
+  useEffect(() => {
+    const foundProduct = packages.find((p) => p.id === Number(productId));
+    if (foundProduct) {
+      setFormData(foundProduct);
+    } else {
+      navigate("/"); // Redirige si no encuentra el producto
+    }
+  }, [productId]);
+
+  if (!formData) return null; // Evita renderizar si no hay datos aún
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev!,
       [name]: name === "base_price" || name === "discount" ? parseFloat(value) : value,
-    });
-  };
-
-  // Actualizar el contenido de la descripción desde el editor Froala
-  const handleChangeContent = (newContent: string) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      description: newContent,  // Actualizamos el campo description con el contenido del editor
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChangeContent = (newContent: string) => {
+    setFormData((prev) => ({
+      ...prev!,
+      description: newContent,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    if (formData?.id) {
+      await editPackage(formData, formData.id);
+    }
   };
 
   return (
     <Card className="max-w-2xl mx-auto">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle>{isCreating ? "Crear Nuevo Producto" : "Editar Producto"}</CardTitle>
-        <Button variant="ghost" size="icon" onClick={onClose}>
+        <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
           <X className="h-4 w-4" />
         </Button>
       </CardHeader>
@@ -70,17 +82,13 @@ export function ProductForm({ product, onClose, isCreating }: ProductFormProps) 
               name="short_description"
               value={formData.short_description || ""}
               onChange={handleChange}
-              placeholder="Escribe una descripción corta del producto..."
-              className="min-h-[100px] resize-y"
+              placeholder="Escribe una descripción corta..."
+              className="min-h-[10px] resize-y"
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">Descripción</Label>
-            {/* Editor de Froala integrado */}
-            <FroalaEditor 
-              content={formData.description}
-              handleChangeContent={handleChangeContent} 
-            />
+            <FroalaEditor content={formData.description} handleChangeContent={handleChangeContent} />
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
@@ -112,22 +120,11 @@ export function ProductForm({ product, onClose, isCreating }: ProductFormProps) 
           </div>
           <div className="space-y-2">
             <Label htmlFor="image">Imagen (URL)</Label>
-            <Input
-              id="image"
-              name="image"
-              value={formData.image || ""}
-              onChange={handleChange}
-              placeholder="https://ejemplo.com/imagen.jpg"
-            />
-          </div>
-          <div className="border rounded-md p-3 text-center text-muted-foreground text-sm">
-            La funcionalidad de comandos no es compatible.
+            <Input id="image" name="image" value={formData.image || ""} onChange={handleChange} placeholder="https://ejemplo.com/imagen.jpg" />
           </div>
         </CardContent>
         <CardFooter className="flex justify-between border-t p-4">
-          <Button variant="outline" onClick={onClose}>
-            Cancelar
-          </Button>
+          <Button variant="outline" onClick={() => navigate("/")}>Cancelar</Button>
           <Button type="submit">{isCreating ? "Crear Producto" : "Guardar Cambios"}</Button>
         </CardFooter>
       </form>

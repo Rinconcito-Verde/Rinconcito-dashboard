@@ -1,17 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import { Edit, Trash, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
 import type { Product } from "./types";
 
 interface ProductTableProps {
   products: Product[];
   onEditClick: (product: Product) => void;
+  onRemoveClick: (id: string) => void;
 }
 
-export function ProductTable({ products, onEditClick }: ProductTableProps) {
+export function ProductTable({ products, onEditClick, onRemoveClick }: ProductTableProps) {
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   return (
     <div className="rounded-md">
@@ -41,10 +45,37 @@ export function ProductTable({ products, onEditClick }: ProductTableProps) {
                       <Edit className="mr-2 h-4 w-4" />
                       Editar
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => console.log("Eliminar producto", product.id)}>
-                      <Trash className="mr-2 h-4 w-4" />
-                      Eliminar
-                    </DropdownMenuItem>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <DropdownMenuItem
+                          onSelect={(e) => {
+                            e.preventDefault();
+                            setSelectedProduct(product);
+                          }}
+                        >
+                          <Trash className="mr-2 h-4 w-4" />
+                          Eliminar
+                        </DropdownMenuItem>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          ¿Estás seguro de que deseas eliminar este producto?
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <AlertDialogAction className='bg-red-500'
+                            onClick={() => {
+                              if (selectedProduct) {
+                                onRemoveClick(selectedProduct.id);
+                                setSelectedProduct(null);
+                              }
+                            }}
+                          >
+                            Eliminar
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
