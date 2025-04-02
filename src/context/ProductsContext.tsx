@@ -34,10 +34,10 @@ export const ProductsProvider = ({ children }) => {
   }, []);
 
   // **Crear un paquete**
-  const addPackage = async (token: string, packageData: any) => {
+  const addPackage = async (packageData: any) => {
     setLoading(true);
     try {
-      const newPackage = await createPackage(token, packageData);
+      const newPackage = await createPackage(packageData);
       enqueueSnackbar("Paquete creado exitosamente", { variant: "success" });
       return newPackage;
     } catch (error) {
@@ -50,10 +50,10 @@ export const ProductsProvider = ({ children }) => {
   };
 
   // **Actualizar un paquete**
-  const editPackage = async (id: number, packageData: any) => {
+  const editPackage = async (packageData) => {
     setLoading(true);
     try {
-      const updatedPackage = await updatePackage(id, packageData);
+      const updatedPackage = await updatePackage(packageData);
       enqueueSnackbar("Paquete actualizado correctamente", { variant: "success" });
       return updatedPackage;
     } catch (error) {
@@ -66,10 +66,10 @@ export const ProductsProvider = ({ children }) => {
   };
 
   // **Eliminar un paquete**
-  const removePackage = async (token: string, id: number) => {
+  const removePackage = async (id: number) => {
     setLoading(true);
     try {
-      await deletePackage(token, id);
+      await deletePackage(id);
       enqueueSnackbar("Paquete eliminado correctamente", { variant: "success" });
     } catch (error) {
       enqueueSnackbar("Error al eliminar el paquete: "+error.message, { variant: "error" });

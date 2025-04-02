@@ -1,5 +1,5 @@
 const API_BASE_URL: string = import.meta.env.VITE_SHOP_API_URL || "http://localhost:8787/api";
-import { Package } from "../types/types";
+import { Package, Category } from "../types/types";
 
 const getAuthHeaders = () => ({
   "Content-Type": "application/json",
@@ -21,7 +21,7 @@ async function fetchData<T>(endpoint: string, options: RequestInit = {}): Promis
   }
 }
 
-export const getCategories = () => fetchData("/categories");
+export const getCategories = (): Promise<Category[]> => fetchData("/categories");
 // Obtener todos los paquetes
 export const getPackages = (): Promise<Package[]> => fetchData<Package[]>("/packages");
 

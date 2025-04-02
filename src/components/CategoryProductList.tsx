@@ -7,6 +7,7 @@ import { useProductsContext } from "@/context/ProductsContext";
 
 interface CategoryProductListProps {
   onEditClick: (product: Product) => void;
+  onRemoveClick: (product: Product) => void;
 }
 
 export function CategoryProductList({ onEditClick, onRemoveClick}: CategoryProductListProps) {

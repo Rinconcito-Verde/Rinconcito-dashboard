@@ -12,7 +12,7 @@ import { SnackbarProvider } from "notistack";
 import { ProductsProvider } from "../context/ProductsContext";
 
 function LayoutContent() {
-  const { editPackage, removePackage } = useProductsContext();
+  const { removePackage } = useProductsContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -40,7 +40,7 @@ function LayoutContent() {
         <main className="p-4 md:p-6 max-h-[99%] overflow-auto">
           <Routes>
             <Route path="/" element={<CategoryProductList onEditClick={handleEditClick} onRemoveClick={removePackage} />} />
-            <Route path="/edit/:productId" element={<ProductForm onClose={handleFormClose} onSubmit={editPackage} />} />
+            <Route path="/edit/:productId" element={<ProductForm isCreating={false} />} />
             <Route path="/add" element={<AddPackageMenu onClose={handleFormClose} />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/sales" element={<p>Próximamente</p>} />

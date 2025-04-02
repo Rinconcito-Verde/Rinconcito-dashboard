@@ -23,10 +23,10 @@ export default function ChangePasswordForm() {
     setSuccess(null);
 
     try {
-      await AuthService.changePassword(formData); // Llamada al servicio para cambiar la contraseña
+      await AuthService.changePassword(formData.username, formData.oldPassword, formData.newPassword); // Llamada al servicio para cambiar la contraseña
       setSuccess(true);
-    } catch (err) {
-      setError("Hubo un error al cambiar la contraseña.");
+    } catch (err:any) {
+      setError("Hubo un error al cambiar la contraseña:" + err);
     }
   };
 

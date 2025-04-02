@@ -47,7 +47,7 @@ export function AddPackageMenu({ onClose }: { onClose: () => void }) {
            <li key={pkg.id} className="flex justify-between items-center p-3 border rounded">
   <span>{pkg.name}</span>
   <Button
-    variant="primary"
+    variant="default"
     onClick={() => {
       console.log("Paquete seleccionado:", pkg);
       addPackage(pkg);

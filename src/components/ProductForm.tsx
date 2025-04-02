@@ -57,7 +57,7 @@ export function ProductForm({ isCreating }: { isCreating: boolean }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData?.id) {
-      await editPackage(formData, formData.id);
+      await editPackage(formData);
     }
   };
 

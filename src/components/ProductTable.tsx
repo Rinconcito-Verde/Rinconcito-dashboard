@@ -11,7 +11,7 @@ import type { Product } from "./types";
 interface ProductTableProps {
   products: Product[];
   onEditClick: (product: Product) => void;
-  onRemoveClick: (id: string) => void;
+  onRemoveClick: any;
 }
 
 export function ProductTable({ products, onEditClick, onRemoveClick }: ProductTableProps) {
