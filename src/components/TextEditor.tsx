@@ -36,7 +36,6 @@ function FroalaEditor({ content, handleChangeContent }) {
   // Función que maneja el cambio de contenido solo si ya no estamos en el estado de carga
   function setEditorContent(newContent) {
     if (!loading) {  // Si no está cargando, permite manejar el cambio de contenido
-     console.log(newContent)
       handleChangeContent(newContent);
     }
   }
