@@ -5,6 +5,8 @@ import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 
 import FroalaEditorComponent from 'react-froala-wysiwyg';
+const uploadURL: string = import.meta.env.VITE_FILES_UPLOAD_URL || "http://localhost:3000/upload";
+const ApiToken = localStorage.getItem('token')
 
 function FroalaEditor({ content, handleChangeContent }) {
   const [loading, setLoading] = useState(true);  // Estado para manejar la carga
@@ -54,6 +56,19 @@ function FroalaEditor({ content, handleChangeContent }) {
         onModelChange={(newContent) => {
           setEditorContent(newContent);  // Solo actualiza el contenido cuando no estamos en carga
         }}
+        config={{
+    imageUpload: true,
+    imageUploadURL: uploadURL,
+    imageUploadMethod: 'POST',
+    imageUploadParam: 'file',
+      videoUploadURL: uploadURL,
+        videoUploadParam: 'file',
+          fileUploadURL: uploadURL,
+        fileUploadParam: 'file',
+    requestHeaders: {
+      Authorization: `Bearer ${ApiToken}`
+    }
+  }}
       />
     </>
   );

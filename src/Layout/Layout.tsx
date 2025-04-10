@@ -10,6 +10,7 @@ import { Settings } from "../components/Settings/Settings";
 import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 import { ProductsProvider } from "../context/ProductsContext";
+import { FileUpload } from "@/components/FileUpload";
 
 function LayoutContent() {
   const { removePackage } = useProductsContext();
@@ -45,6 +46,7 @@ function LayoutContent() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/sales" element={<p>Próximamente</p>} />
             <Route path="/stats" element={<p>Próximamente</p>} />
+            <Route path="/upload" element={<FileUpload/>} />
           </Routes>
           <p className="mb-28"></p>
         </main>

@@ -8,6 +8,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import FroalaEditor from "./TextEditor"; 
 import { useNavigate, useParams } from "react-router-dom";
 import { useProductsContext } from "../context/ProductsContext";
+import { ImageUpload } from "./ImageUpload";
 
 interface Product {
   id?: number;
@@ -35,6 +36,7 @@ export function ProductForm({ isCreating }: { isCreating: boolean }) {
     } else {
       navigate("/"); // Redirige si no encuentra el producto
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
   if (!formData) return null; // Evita renderizar si no hay datos aún
@@ -128,13 +130,15 @@ export function ProductForm({ isCreating }: { isCreating: boolean }) {
               />
             </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="image">Imagen (URL)</Label>
-            <Input id="image" name="image" value={formData.image || ""} onChange={handleChange} placeholder="https://ejemplo.com/imagen.jpg" />
-          </div>
+            <ImageUpload
+              image={formData.image}
+              setImage={(newImage: string) =>
+                setFormData((prev) => ({ ...prev!, image: newImage }))
+              }
+            />
         </CardContent>
         <CardFooter className="flex justify-between border-t p-4">
-          <Button variant="outline" onClick={() => navigate("/")}>Cancelar</Button>
+          <p> </p>
           <Button type="submit">{isCreating ? "Crear Producto" : "Guardar Cambios"}</Button>
         </CardFooter>
       </form>

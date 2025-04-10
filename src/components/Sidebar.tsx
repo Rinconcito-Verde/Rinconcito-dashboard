@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { Package, BarChart, Settings, Users, LogOut, X } from "lucide-react";
+import { Package, BarChart, Settings, Users, LogOut, X, CloudUpload } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
@@ -86,6 +86,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               >
                 <BarChart className="h-4 w-4" />
                 Estadísticas
+              </Link>
+               <Link
+                to="/upload"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground"
+              >
+                <CloudUpload className="h-4 w-4" />
+                Subir Archivos
               </Link>
               <Link
                 to="/settings"
