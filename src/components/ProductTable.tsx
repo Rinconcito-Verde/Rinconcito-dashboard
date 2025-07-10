@@ -31,7 +31,7 @@ export function ProductTable({ products, onEditClick, onRemoveClick }: ProductTa
           {products.map((product) => (
             <TableRow key={product.id}>
               <TableCell className="font-medium">{product.name}</TableCell>
-              <TableCell>{product.base_price.toFixed(2)} {product.currency}</TableCell>
+              <TableCell>{product.price.toFixed(2)} {product.currency}</TableCell>
               <TableCell className="text-right">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

@@ -3,7 +3,7 @@ export interface Product {
   name: string
   currency : string
   description: string
-  base_price: number
+  price: number
   stock: number
   category: string
   image?: string

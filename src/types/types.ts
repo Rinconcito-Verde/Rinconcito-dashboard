@@ -3,8 +3,6 @@ export interface Package {
     name: string;
     description: string;
     short_description: string | null;
-    base_price: number;
-    total_price: number;
     price: number;
     discount: number;
     sales_tax: number;
@@ -20,7 +18,9 @@ export interface Package {
     category?: { id: number; name: string }; // Hacer opcional si puede ser null
 }
 export interface Category {
-  id: number;
-  name: string;
-  description: string;
+  id: number
+  name: string
+  slug: string
+  description: string | null
+  sort_order: number | null
 }

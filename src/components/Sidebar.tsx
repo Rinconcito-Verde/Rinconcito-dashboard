@@ -57,7 +57,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           <div className="flex h-14 items-center border-b px-4 justify-between">
             <Link to="/" className="flex items-center gap-2 font-semibold">
               <Package className="h-6 w-6" />
-              <span>ZUROS NETWORK</span>
+              <span>Rinconcito Verde</span>
             </Link>
             <Button variant="ghost" size="icon" className="lg:hidden" onClick={onClose}>
               <X className="h-4 w-4" />

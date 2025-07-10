@@ -44,18 +44,18 @@ export function AddPackageMenu({ onClose }: { onClose: () => void }) {
       {filteredPackages.length > 0 ? (
         <ul className="space-y-2">
           {filteredPackages.map((pkg) => (
-           <li key={pkg.id} className="flex justify-between items-center p-3 border rounded">
-  <span>{pkg.name}</span>
-  <Button
-    variant="default"
-    onClick={() => {
-      console.log("Paquete seleccionado:", pkg);
-      addPackage(pkg);
-    }}
-  >
-    Agregar
-  </Button>
-</li>
+            <li key={pkg.id} className="flex justify-between items-center p-3 border rounded">
+              <span>{pkg.name}</span>
+              <Button
+                variant="default"
+                onClick={() => {
+                  console.log("Paquete seleccionado:", pkg);
+                  addPackage(pkg);
+                }}
+              >
+                Agregar
+              </Button>
+            </li>
 
           ))}
         </ul>

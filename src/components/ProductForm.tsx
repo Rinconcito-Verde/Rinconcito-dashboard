@@ -4,8 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import FroalaEditor from "./TextEditor"; 
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import FroalaEditor from "./TextEditor";
 import { useNavigate, useParams } from "react-router-dom";
 import { useProductsContext } from "../context/ProductsContext";
 import { ImageUpload } from "./ImageUpload";
@@ -13,9 +19,10 @@ import { ImageUpload } from "./ImageUpload";
 interface Product {
   id?: number;
   name: string;
+  slug: string;
   short_description: string | null;
   description: string;
-  base_price: number;
+  price: number;
   discount: number;
   currency: string;
   image: string;
@@ -25,27 +32,31 @@ interface Product {
 export function ProductForm({ isCreating }: { isCreating: boolean }) {
   const { productId } = useParams();
   const navigate = useNavigate();
-  const { packages, editPackage } = useProductsContext();
+  const { packages, productMock, editPackage, addPackage } = useProductsContext();
 
   const [formData, setFormData] = useState<Partial<Product> | null>(null);
 
   useEffect(() => {
-    const foundProduct = packages.find((p) => p.id === Number(productId));
-    if (foundProduct) {
-      setFormData(foundProduct);
+    if (isCreating) {
+      setFormData(productMock);
     } else {
-      navigate("/"); // Redirige si no encuentra el producto
+      const foundProduct = packages.find((p) => p.id === Number(productId));
+      if (foundProduct) {
+        setFormData(foundProduct);
+      } else {
+        navigate("/");
+      }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCreating, productId]);
 
-  if (!formData) return null; // Evita renderizar si no hay datos aún
+  if (!formData) return null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev!,
-      [name]: name === "base_price" || name === "discount" ? parseFloat(value) : value,
+      [name]: name === "price" || name === "discount" ? parseFloat(value) : value,
     }));
   };
 
@@ -56,22 +67,25 @@ export function ProductForm({ isCreating }: { isCreating: boolean }) {
     }));
   };
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  // Elimina los <p> con el atributo data-f-id="pbf" de la descripción
-  const cleanedDescription = formData?.description.replace(
-    /<p[^>]*data-f-id="pbf"[^>]*>.*?<\/p>/g,
-    ''
-  );
-  const updatedFormData = {
-    ...formData,
-    description: cleanedDescription,
-  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  if (updatedFormData?.id) {
-    await editPackage(updatedFormData);
-  }
-};
+    const cleanedDescription = formData?.description.replace(
+      /<p[^>]*data-f-id="pbf"[^>]*>.*?<\/p>/g,
+      ""
+    );
+
+    const updatedFormData = {
+      ...formData,
+      description: cleanedDescription,
+    };
+
+    if (isCreating) {
+      await addPackage(updatedFormData);
+    } else if (updatedFormData?.id) {
+      await editPackage(updatedFormData);
+    }
+  };
 
   return (
     <Card className="max-w-2xl mx-auto">
@@ -85,7 +99,24 @@ export function ProductForm({ isCreating }: { isCreating: boolean }) {
         <CardContent className="space-y-4 pt-4">
           <div className="space-y-2">
             <Label htmlFor="name">Nombre del Producto</Label>
-            <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
+            <Input
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="slug">Slug</Label>
+            <Input
+              id="slug"
+              name="slug"
+              value={formData.slug}
+              onChange={handleChange}
+              placeholder="ej: nombre-del-producto"
+              required
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="short_description">Descripción Corta</Label>
@@ -100,18 +131,21 @@ export function ProductForm({ isCreating }: { isCreating: boolean }) {
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">Descripción</Label>
-            <FroalaEditor content={formData.description} handleChangeContent={handleChangeContent} />
+            <FroalaEditor
+              content={formData.description}
+              handleChangeContent={handleChangeContent}
+            />
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="base_price">Precio Base ({formData.currency})</Label>
+              <Label htmlFor="price">Precio Base ({formData.currency})</Label>
               <Input
-                id="base_price"
-                name="base_price"
+                id="price"
+                name="price"
                 type="number"
                 step="0.01"
                 min="0"
-                value={formData.base_price}
+                value={formData.price}
                 onChange={handleChange}
                 required
               />
@@ -130,16 +164,18 @@ export function ProductForm({ isCreating }: { isCreating: boolean }) {
               />
             </div>
           </div>
-            <ImageUpload
-              image={formData.image}
-              setImage={(newImage: string) =>
-                setFormData((prev) => ({ ...prev!, image: newImage }))
-              }
-            />
+          <ImageUpload
+            image={formData.image}
+            setImage={(newImage: string) =>
+              setFormData((prev) => ({ ...prev!, image: newImage }))
+            }
+          />
         </CardContent>
         <CardFooter className="flex justify-between border-t p-4">
           <p> </p>
-          <Button type="submit">{isCreating ? "Crear Producto" : "Guardar Cambios"}</Button>
+          <Button type="submit">
+            {isCreating ? "Crear Producto" : "Guardar Cambios"}
+          </Button>
         </CardFooter>
       </form>
     </Card>

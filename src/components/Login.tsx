@@ -39,10 +39,10 @@ export function Login() {
         <CardHeader className="space-y-2 text-center">
           <div className="flex justify-center mb-4">
             <div className="rounded-full bg-primary/10 p-3">
-              <img src="https://zuros.xyz/icon3.png" className="h-10 w-10 text-primary" />
+              <img src="https://cdn.zuros.xyz/1749684432353.webp" className="h-10 w-10 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl text-cyan-500">ZUROS <span className="text-pink-400">NETWORK</span></CardTitle>
+          <CardTitle className="text-2xl">Rinconcito Verde</CardTitle>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">

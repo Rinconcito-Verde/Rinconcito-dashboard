@@ -23,20 +23,17 @@ async function fetchData<T>(endpoint: string, options: RequestInit = {}): Promis
 
 export const getCategories = (): Promise<Category[]> => fetchData("/categories");
 // Obtener todos los paquetes
-export const getPackages = (): Promise<Package[]> => fetchData<Package[]>("/packages");
+export const getPackages = (): Promise<Package[]> => fetchData<Package[]>("/products");
 
 // Obtener un paquete por ID
-export const getPackageById = (id: number): Promise<Package> => fetchData<Package>(`/packages/${id}`);
+export const getPackageById = (id: number): Promise<Package> => fetchData<Package>(`/products/${id}`);
 
 export const createPackage = (packageData: Package): Promise<Package> => {
   const formattedPackageData = {
-    ...packageData,
-    short_description: " ", // Asegurar que tenga una descripción
-    sort_order: packageData.order, // Asegurar un orden válido
-    category_id: packageData.category.id, // Asegurar una categoría válida
+    ...packageData
   };
 
-  return fetchData<Package>("/packages", {
+  return fetchData<Package>("/products", {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(formattedPackageData),
@@ -45,7 +42,7 @@ export const createPackage = (packageData: Package): Promise<Package> => {
 
 
 export const updatePackage = (packageData: Partial<Package>): Promise<Package> => {
-  return fetchData<Package>(`/packages/${packageData.id}`, {
+  return fetchData<Package>(`/products/${packageData.id}`, {
     method: "PUT",
     headers: getAuthHeaders(),
     body: JSON.stringify(packageData),
@@ -54,8 +51,46 @@ export const updatePackage = (packageData: Partial<Package>): Promise<Package> =
 
 // Eliminar un paquete por ID (requiere autenticación)
 export const deletePackage = (id: number): Promise<{ success: boolean; message: string }> => {
-  return fetchData<{ success: boolean; message: string }>(`/packages/${id}`, {
+  return fetchData<{ success: boolean; message: string }>(`/products/${id}`, {
     method: "DELETE",
     headers: getAuthHeaders(),
   });
 };
+
+
+
+
+
+
+
+
+
+export const createCategory = (categoryData: Category): Promise<Category> => {
+  const formattedPackageData = {
+    ...categoryData
+  };
+
+  return fetchData<Category>("/categories", {
+    method: "POST",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(formattedPackageData),
+  });
+};
+
+
+export const updateCategory = (categoryData: Partial<Category>): Promise<Category> => {
+  return fetchData<Category>(`/categories/${categoryData.id}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(categoryData),
+  });
+};
+
+
+export const deleteCategory = (id: number): Promise<{ success: boolean; message: string }> => {
+  return fetchData<{ success: boolean; message: string }>(`/categories/${id}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  });
+};
+

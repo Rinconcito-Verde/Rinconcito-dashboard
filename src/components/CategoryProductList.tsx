@@ -13,14 +13,23 @@ interface CategoryProductListProps {
 export function CategoryProductList({ onEditClick, onRemoveClick}: CategoryProductListProps) {
   const { categories, packages, error } = useProductsContext();
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
-  const categorizedProducts = useMemo(() => {
-    return packages.reduce((acc, product) => {
-      const category = categories.find((c) => c.id === product.category_id)?.name || "Sin categoría";
-      if (!acc[category]) acc[category] = [];
-      acc[category].push(product);
-      return acc;
-    }, {} as Record<string, Product[]>);
-  }, [packages, categories]);
+const categorizedProducts = useMemo(() => {
+  // Inicializa todas las categorías, incluso vacías
+  const acc: Record<string, Product[]> = {};
+
+  categories.forEach((cat) => {
+    acc[cat.name] = [];
+  });
+
+  packages.forEach((product) => {
+    const category = categories.find((c) => c.id === product.category_id)?.name || "Sin categoría";
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(product);
+  });
+
+  return acc;
+}, [packages, categories]);
+
 
   useMemo(() => {
     setExpandedCategories((prevState) => {

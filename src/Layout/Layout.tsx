@@ -4,13 +4,14 @@ import { ProductForm } from "@/components/ProductForm";
 import { CategoryProductList } from "@/components/CategoryProductList";
 import type { Product } from "@/components/types";
 import { useProductsContext } from "../context/ProductsContext";
-import { AddPackageMenu } from "../components/AddPackageMenu";
 import { Header } from "../components/Nav/Header";
 import { Settings } from "../components/Settings/Settings";
 import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 import { ProductsProvider } from "../context/ProductsContext";
 import { FileUpload } from "@/components/FileUpload";
+import { CategoryManager } from "@/components/CategoryManager";
+import { CategoryProvider } from "@/context/CategoryContext";
 
 function LayoutContent() {
   const { removePackage } = useProductsContext();
@@ -37,16 +38,17 @@ function LayoutContent() {
     <div className="flex min-h-screen max-h-screen overflow-hidden bg-white">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex-1">
-        <Header toggleSidebar={toggleSidebar} handleCreateClick={handleCreateClick} />
+        <Header toggleSidebar={toggleSidebar} handleCreateClick={handleCreateClick}  handleCategoryClick={() => navigate("/category")}/>
         <main className="p-4 md:p-6 max-h-[99%] overflow-auto">
           <Routes>
             <Route path="/" element={<CategoryProductList onEditClick={handleEditClick} onRemoveClick={removePackage} />} />
             <Route path="/edit/:productId" element={<ProductForm isCreating={false} />} />
-            <Route path="/add" element={<AddPackageMenu onClose={handleFormClose} />} />
+            <Route path="/category" element={<CategoryManager onBack={handleFormClose} />} />
+            <Route path="/add" element={<ProductForm isCreating={true} />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/sales" element={<p>Próximamente</p>} />
             <Route path="/stats" element={<p>Próximamente</p>} />
-            <Route path="/upload" element={<FileUpload/>} />
+            <Route path="/upload" element={<FileUpload />} />
           </Routes>
           <p className="mb-28"></p>
         </main>
@@ -58,11 +60,13 @@ function LayoutContent() {
 export default function Layout() {
   return (
     <SnackbarProvider>
-      <ProductsProvider>
-        <Router>
-          <LayoutContent />
-        </Router>
-      </ProductsProvider>
+      <CategoryProvider>
+        <ProductsProvider>
+          <Router>
+            <LayoutContent />
+          </Router>
+        </ProductsProvider>
+      </CategoryProvider>
     </SnackbarProvider>
   );
 }
