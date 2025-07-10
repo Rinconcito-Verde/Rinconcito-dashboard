@@ -24,3 +24,16 @@ export interface Category {
   description: string | null
   sort_order: number | null
 }
+
+export interface CreateCategoryRequest {
+  name: string
+  slug: string
+  description?: string | null
+  sort_order?: number | null
+}
+export interface UpdateCategoryRequest {
+  name?: string
+  slug?: string
+  description?: string | null
+  sort_order?: number | null
+}

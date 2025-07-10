@@ -20,7 +20,7 @@ interface CategoryFormProps {
 
 export function CategoryForm({ category, onClose, isCreating }: CategoryFormProps) {
   console.log(category)
-  const { addCategory, updateCategory, loading } = useCategories()
+  const { addCategory, updateCategory, } = useCategories()
   const [formData, setFormData] = useState({
     name: "",
     slug: "",

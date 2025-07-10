@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { createContext, useState, useContext, useEffect } from "react"
-import type { Category, CreateCategoryRequest, UpdateCategoryRequest } from "./types"
+import type { Category, CreateCategoryRequest, UpdateCategoryRequest } from "../types/types"
 import {
   getCategories,
   createCategory as createCategoryAPI,
