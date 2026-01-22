@@ -88,7 +88,7 @@ export function ProductForm({ isCreating }: { isCreating: boolean }) {
   };
 
   return (
-    <Card className="max-w-2xl mx-auto">
+    <Card className="max-w-[1232px] mx-auto">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle>{isCreating ? "Crear Nuevo Producto" : "Editar Producto"}</CardTitle>
         <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
@@ -105,6 +105,7 @@ export function ProductForm({ isCreating }: { isCreating: boolean }) {
               value={formData.name}
               onChange={handleChange}
               required
+              maxLength={70}
             />
           </div>
           <div className="space-y-2">
@@ -116,6 +117,7 @@ export function ProductForm({ isCreating }: { isCreating: boolean }) {
               onChange={handleChange}
               placeholder="ej: nombre-del-producto"
               required
+              maxLength={70}
             />
           </div>
           <div className="space-y-2">
@@ -127,6 +129,7 @@ export function ProductForm({ isCreating }: { isCreating: boolean }) {
               onChange={handleChange}
               placeholder="Escribe una descripción corta..."
               className="min-h-[10px] resize-y"
+              maxLength={70}
             />
           </div>
           <div className="space-y-2">
